@@ -15,7 +15,14 @@ public final class ExceptionMapper
         try {
             body.run();
         } catch (Exception e) {
-            throw ctx.translate(e, data);
+            InternalException equiv = ctx.translate(e, data);
+
+            // Apply default translation, if necessary
+            if(equiv == null) {
+                throw new InternalException("Unknown internal exception occurred", e, false);
+            } else {
+                throw equiv;
+            }
         }
     }
 }

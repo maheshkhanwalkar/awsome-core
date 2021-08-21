@@ -12,7 +12,11 @@ import com.revtekk.awsome.core.exception.InternalException;
 public interface MappingContext<T>
 {
     /**
-     * Translate an exception into an internal exception
+     * Translate an exception into an internal exception.
+     *
+     * If the particular implementation does not know how to translate the
+     * original exception, then it should return null.
+     *
      * @param orig original exception
      * @param data associated data
      * @return the new internal exception representation
