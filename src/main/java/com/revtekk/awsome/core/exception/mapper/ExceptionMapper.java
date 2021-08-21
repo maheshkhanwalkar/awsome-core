@@ -3,6 +3,7 @@ package com.revtekk.awsome.core.exception.mapper;
 import com.revtekk.awsome.core.exception.InternalException;
 import software.amazon.awssdk.core.exception.SdkException;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -21,7 +22,9 @@ public final class ExceptionMapper
         } catch (Exception e) {
             MappingContext<T> ctx;
             try {
-                ctx = clazz.getDeclaredConstructor().newInstance();
+                Constructor<K> ct = clazz.getDeclaredConstructor();
+                ct.setAccessible(true);
+                ctx = ct.newInstance();
             }
             catch (InstantiationException | IllegalAccessException |
                     InvocationTargetException | NoSuchMethodException instantiationException) {
