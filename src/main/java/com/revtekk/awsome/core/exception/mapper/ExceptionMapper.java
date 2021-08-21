@@ -1,6 +1,7 @@
 package com.revtekk.awsome.core.exception.mapper;
 
 import com.revtekk.awsome.core.exception.InternalException;
+import software.amazon.awssdk.core.exception.SdkException;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -31,7 +32,13 @@ public final class ExceptionMapper
 
             // Apply default translation, if necessary
             if(equiv == null) {
-                throw new InternalException("Unknown internal exception occurred", e, false);
+                boolean retry = false;
+
+                if (e instanceof SdkException) {
+                    retry = ((SdkException) e).retryable();
+                }
+
+                throw new InternalException("Unknown internal exception occurred", e, retry);
             } else {
                 throw equiv;
             }
